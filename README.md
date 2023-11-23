@@ -1,1 +1,1 @@
-# Move my Blog from Wordpress to Github
+# Migrate my Blog from Wordpress to Github

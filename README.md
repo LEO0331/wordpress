@@ -1,1 +1,1 @@
-# Migrate my Blog from Wordpress to Github
+# Migrate my Blog from Wordpress to Github via Obsidian

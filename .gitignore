@@ -23,3 +23,6 @@ my-site/vendor/
 # Optional local env files
 .env
 .env.*
+
+# Lighthouse local artifacts
+.lighthouseci/

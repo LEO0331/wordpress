@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 投資"
+title: "投資"
 permalink: /category/投資/
 category_name: "投資"
-category_count: 8
 ---

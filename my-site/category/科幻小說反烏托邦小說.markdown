@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 科幻小說（反烏托邦小說）"
+title: "科幻小說（反烏托邦小說）"
 permalink: /category/科幻小說反烏托邦小說/
 category_name: "科幻小說（反烏托邦小說）"
-category_count: 1
 ---

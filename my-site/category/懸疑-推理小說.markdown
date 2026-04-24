@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 懸疑/推理小說"
+title: "懸疑/推理小說"
 permalink: /category/懸疑-推理小說/
 category_name: "懸疑/推理小說"
-category_count: 4
 ---

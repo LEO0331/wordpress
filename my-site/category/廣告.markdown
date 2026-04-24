@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 廣告"
+title: "廣告"
 permalink: /category/廣告/
 category_name: "廣告"
-category_count: 1
 ---

@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 電影評論"
+title: "電影評論"
 permalink: /category/電影評論/
 category_name: "電影評論"
-category_count: 23
 ---

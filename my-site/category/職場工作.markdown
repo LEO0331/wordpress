@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 職場工作"
+title: "職場工作"
 permalink: /category/職場工作/
 category_name: "職場工作"
-category_count: 10
 ---

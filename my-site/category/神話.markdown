@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 神話"
+title: "神話"
 permalink: /category/神話/
 category_name: "神話"
-category_count: 2
 ---

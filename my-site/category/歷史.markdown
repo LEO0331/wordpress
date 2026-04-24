@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 歷史"
+title: "歷史"
 permalink: /category/歷史/
 category_name: "歷史"
-category_count: 4
 ---

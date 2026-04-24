@@ -1,7 +1,6 @@
 ---
 ---
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap');
 @import "minima";
 
 :root {
@@ -19,7 +18,7 @@ body {
     linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 16rem),
     radial-gradient(circle at 88% 3%, #f1e2d1 0, var(--paper) 52%);
   color: var(--ink);
-  font-family: 'Work Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Avenir Next", Avenir, "Segoe UI", Roboto, sans-serif;
 }
 
 .site-header,
@@ -35,7 +34,11 @@ h3,
 h4,
 h5,
 .post-link {
-  font-family: 'DM Serif Display', Georgia, serif;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+}
+
+.wrapper {
+  max-width: 1260px;
 }
 
 .page-content {
@@ -491,6 +494,10 @@ h5,
 }
 
 @media (max-width: 640px) {
+  .wrapper {
+    max-width: 100%;
+  }
+
   .page-content {
     padding-top: 1.2rem;
   }

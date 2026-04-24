@@ -1,0 +1,46 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+
+      - name: Install dependencies
+        working-directory: my-site
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Build Jekyll (Lighthouse target)
+        working-directory: my-site
+        run: bundle exec jekyll build --baseurl ""
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Lighthouse CI
+        run: npx @lhci/cli@0.13.x autorun --config=.lighthouserc.json
+
+      - name: Upload Lighthouse artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouseci-reports
+          path: .lighthouseci

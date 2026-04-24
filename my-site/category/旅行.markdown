@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 旅行"
+title: "旅行"
 permalink: /category/旅行/
 category_name: "旅行"
-category_count: 4
 ---

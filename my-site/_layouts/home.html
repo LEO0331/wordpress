@@ -32,7 +32,7 @@ layout: default
           <article class="lead-story">
             {% if featured_image %}
               <a class="lead-media" href="{{ featured.url | relative_url }}" aria-label="{{ featured.title | escape }}">
-                <img src="{{ featured_image }}" alt="{{ featured.title | escape }}" loading="eager" />
+                <img src="{{ featured_image }}" alt="{{ featured.title | escape }}" loading="eager" fetchpriority="high" decoding="async" width="1200" height="700" />
               </a>
             {% endif %}
             <div class="lead-copy">
@@ -57,7 +57,7 @@ layout: default
               <article class="mini-story">
                 {% if side_image %}
                   <a class="mini-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
-                    <img src="{{ side_image }}" alt="{{ post.title | escape }}" loading="lazy" />
+                    <img src="{{ side_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="92" height="72" />
                   </a>
                 {% endif %}
                 <div>
@@ -99,7 +99,7 @@ layout: default
             <article class="post-card">
               {% if card_image %}
                 <a class="card-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
-                  <img src="{{ card_image }}" alt="{{ post.title | escape }}" loading="lazy" />
+                  <img src="{{ card_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="400" height="260" />
                 </a>
               {% endif %}
               <div class="card-body">

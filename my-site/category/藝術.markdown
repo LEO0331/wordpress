@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 藝術"
+title: "藝術"
 permalink: /category/藝術/
 category_name: "藝術"
-category_count: 2
 ---

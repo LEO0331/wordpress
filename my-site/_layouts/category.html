@@ -3,14 +3,13 @@ layout: default
 ---
 
 <div class="category-page">
+  {% assign cat_posts = site.posts | where_exp: "post", "post.categories contains page.category_name" %}
   <header class="category-header">
-    <p class="kicker">Category</p>
     <h1>{{ page.category_name }}</h1>
-    <p>{{ page.category_count }} posts</p>
+    <p>{{ cat_posts.size }} posts</p>
   </header>
 
   <ul class="category-posts">
-    {% assign cat_posts = site.posts | where_exp: "post", "post.categories contains page.category_name" %}
     {% for post in cat_posts %}
       <li>
         <span class="meta">{{ post.date | date: "%Y-%m-%d" }}</span>

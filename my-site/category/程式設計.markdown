@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 程式設計"
+title: "程式設計"
 permalink: /category/程式設計/
 category_name: "程式設計"
-category_count: 5
 ---

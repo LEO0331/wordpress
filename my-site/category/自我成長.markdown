@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 自我成長"
+title: "自我成長"
 permalink: /category/自我成長/
 category_name: "自我成長"
-category_count: 11
 ---

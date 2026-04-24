@@ -4,6 +4,7 @@
 require 'yaml'
 require 'fileutils'
 require 'pathname'
+require 'date'
 
 SITE_ROOT = File.expand_path('..', __dir__)
 POSTS_DIR = File.join(SITE_ROOT, '_posts')
@@ -42,7 +43,7 @@ def unique_slug(base, used)
 end
 
 category_counts = Hash.new(0)
-Dir.glob(File.join(POSTS_DIR, '*.md')).each do |path|
+Dir.glob(File.join(POSTS_DIR, '*.{md,markdown}')).each do |path|
   fm = parse_front_matter(path)
   Array(fm['categories']).each do |category|
     key = category.to_s.strip
@@ -68,10 +69,9 @@ sorted.each do |name, count|
   content = <<~MD
     ---
     layout: category
-    title: "Category: #{name}"
+    title: "#{name}"
     permalink: /category/#{slug}/
     category_name: "#{name}"
-    category_count: #{count}
     ---
   MD
 

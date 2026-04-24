@@ -1,7 +1,6 @@
 ---
 layout: category
-title: "Category: 心理學"
+title: "心理學"
 permalink: /category/心理學/
 category_name: "心理學"
-category_count: 7
 ---

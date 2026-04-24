@@ -7,3 +7,14 @@ url: "https://leo0331.github.io"
 theme: minima
 plugins:
   - jekyll-feed
+
+home_curation:
+  pinned_titles:
+    - "投資思考 04"
+    - "投資思考 03"
+    - "投資思考 02"
+    - "投資思考 01"
+  headline_initial: 6
+  headline_max: 24
+  latest_initial: 9
+  latest_max: 24

@@ -11,6 +11,7 @@ layout: default
       <a href="#lead">封面故事</a>
       <a href="#headlines">焦點新聞</a>
       <a href="#latest">最新文章</a>
+      <a href="{{ '/investing-thoughts/' | relative_url }}">投資思考專欄</a>
       <a href="{{ '/archive/' | relative_url }}">文章彙整</a>
       <a href="{{ '/about/' | relative_url }}">關於本站</a>
     </nav>
@@ -24,6 +25,9 @@ layout: default
         {% assign featured = site.posts.first %}
       {% endunless %}
       {% assign non_featured_posts = site.posts | where_exp: "post", "post.url != featured.url" %}
+      {% assign pinned_titles = site.home_curation.pinned_titles | default: empty %}
+      {% assign editor_selected = '|' %}
+      {% assign headline_selected = '|' %}
 
       {% if featured %}
         {% assign featured_parts = featured.content | split: 'src="' %}
@@ -51,25 +55,98 @@ layout: default
 
           <div class="lead-side">
             <h3>編輯精選</h3>
-            {% for post in non_featured_posts limit:3 %}
-              {% assign side_parts = post.content | split: 'src="' %}
-              {% if side_parts.size > 1 %}
-                {% assign side_image = side_parts[1] | split: '"' | first %}
-              {% else %}
-                {% assign side_image = nil %}
-              {% endif %}
+            {% assign editor_count = 0 %}
 
-              <article class="mini-story">
-                {% if side_image %}
-                  <a class="mini-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
-                    <img src="{{ side_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="92" height="72" />
-                  </a>
+            {% for pinned_title in pinned_titles %}
+              {% if editor_count >= 5 %}
+                {% break %}
+              {% endif %}
+              {% assign pinned_post = non_featured_posts | where: "title", pinned_title | first %}
+              {% if pinned_post %}
+                {% assign pinned_key = '|' | append: pinned_post.url | append: '|' %}
+                {% unless editor_selected contains pinned_key %}
+                  {% assign side_parts = pinned_post.content | split: 'src="' %}
+                  {% if side_parts.size > 1 %}
+                    {% assign side_image = side_parts[1] | split: '"' | first %}
+                  {% else %}
+                    {% assign side_image = nil %}
+                  {% endif %}
+
+                  <article class="mini-story">
+                    {% if side_image %}
+                      <a class="mini-media" href="{{ pinned_post.url | relative_url }}" aria-label="{{ pinned_post.title | escape }}">
+                        <img src="{{ side_image }}" alt="{{ pinned_post.title | escape }}" loading="lazy" decoding="async" width="92" height="72" />
+                      </a>
+                    {% endif %}
+                    <div>
+                      <p class="meta">{{ pinned_post.date | date: "%Y-%m-%d" }}</p>
+                      <h4><a href="{{ pinned_post.url | relative_url }}">{{ pinned_post.title }}</a></h4>
+                    </div>
+                  </article>
+                  {% assign editor_selected = editor_selected | append: pinned_post.url | append: '|' %}
+                  {% assign editor_count = editor_count | plus: 1 %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+
+            {% for post in non_featured_posts %}
+              {% if editor_count >= 5 %}
+                {% break %}
+              {% endif %}
+              {% assign post_key = '|' | append: post.url | append: '|' %}
+              {% if post.title contains '投資思考' %}
+                {% unless editor_selected contains post_key %}
+                {% assign side_parts = post.content | split: 'src="' %}
+                {% if side_parts.size > 1 %}
+                  {% assign side_image = side_parts[1] | split: '"' | first %}
+                {% else %}
+                  {% assign side_image = nil %}
                 {% endif %}
-                <div>
-                  <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
-                  <h4><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h4>
-                </div>
-              </article>
+
+                <article class="mini-story">
+                  {% if side_image %}
+                    <a class="mini-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
+                      <img src="{{ side_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="92" height="72" />
+                    </a>
+                  {% endif %}
+                  <div>
+                    <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
+                    <h4><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h4>
+                  </div>
+                </article>
+                {% assign editor_selected = editor_selected | append: post.url | append: '|' %}
+                {% assign editor_count = editor_count | plus: 1 %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+
+            {% for post in non_featured_posts %}
+              {% if editor_count >= 5 %}
+                {% break %}
+              {% endif %}
+              {% assign post_key = '|' | append: post.url | append: '|' %}
+              {% unless editor_selected contains post_key %}
+                {% assign side_parts = post.content | split: 'src="' %}
+                {% if side_parts.size > 1 %}
+                  {% assign side_image = side_parts[1] | split: '"' | first %}
+                {% else %}
+                  {% assign side_image = nil %}
+                {% endif %}
+
+                <article class="mini-story">
+                  {% if side_image %}
+                    <a class="mini-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
+                      <img src="{{ side_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="92" height="72" />
+                    </a>
+                  {% endif %}
+                  <div>
+                    <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
+                    <h4><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h4>
+                  </div>
+                </article>
+                {% assign editor_selected = editor_selected | append: post.url | append: '|' %}
+                {% assign editor_count = editor_count | plus: 1 %}
+              {% endunless %}
             {% endfor %}
           </div>
         </section>
@@ -77,14 +154,56 @@ layout: default
 
       <section id="headlines" class="headline-ribbon">
         <h3>焦點新聞</h3>
-        <ul>
-          {% for post in non_featured_posts offset:3 limit:6 %}
-            <li>
-              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              <span>{{ post.date | date: "%Y-%m-%d" }}</span>
-            </li>
+        {% assign headline_initial = site.home_curation.headline_initial | default: 6 %}
+        {% assign headline_max = site.home_curation.headline_max | default: 24 %}
+        {% assign headline_count = 0 %}
+        {% assign headline_selected = editor_selected %}
+
+        <ul class="js-paginated-list" data-batch="{{ headline_initial }}">
+          {% for post in non_featured_posts %}
+            {% if headline_count >= headline_max %}
+              {% break %}
+            {% endif %}
+            {% assign is_travel_or_practical = false %}
+            {% if post.title contains '遊記' or post.categories contains '實用' %}
+              {% assign is_travel_or_practical = true %}
+            {% endif %}
+            {% assign post_key = '|' | append: post.url | append: '|' %}
+            {% if is_travel_or_practical %}
+              {% unless headline_selected contains post_key %}
+              <li class="paged-item{% if headline_count >= headline_initial %} is-collapsed{% endif %}">
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                <span>{{ post.date | date: "%Y-%m-%d" }}</span>
+              </li>
+              {% assign headline_selected = headline_selected | append: post.url | append: '|' %}
+              {% assign headline_count = headline_count | plus: 1 %}
+              {% endunless %}
+            {% endif %}
+          {% endfor %}
+
+          {% for post in non_featured_posts %}
+            {% if headline_count >= headline_max %}
+              {% break %}
+            {% endif %}
+            {% assign post_key = '|' | append: post.url | append: '|' %}
+            {% unless headline_selected contains post_key %}
+              <li class="paged-item{% if headline_count >= headline_initial %} is-collapsed{% endif %}">
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                <span>{{ post.date | date: "%Y-%m-%d" }}</span>
+              </li>
+              {% assign headline_selected = headline_selected | append: post.url | append: '|' %}
+              {% assign headline_count = headline_count | plus: 1 %}
+            {% endunless %}
           {% endfor %}
         </ul>
+
+        {% if headline_count > headline_initial %}
+          <div class="section-actions">
+            <button type="button" class="load-more-btn js-load-more" data-target="#headlines .js-paginated-list">
+              載入更多焦點新聞
+            </button>
+          </div>
+        {% endif %}
       </section>
 
       <section id="latest" class="latest-grid">
@@ -92,8 +211,19 @@ layout: default
           <h3>最新文章</h3>
           <a href="{{ '/archive/' | relative_url }}" class="section-link">查看全部</a>
         </div>
-        <div class="post-cards">
-          {% for post in non_featured_posts offset:9 limit:9 %}
+
+        {% assign latest_initial = site.home_curation.latest_initial | default: 9 %}
+        {% assign latest_max = site.home_curation.latest_max | default: 24 %}
+        {% assign latest_count = 0 %}
+        {% assign curated_selected = editor_selected | append: headline_selected %}
+
+        <div class="post-cards js-paginated-list" data-batch="{{ latest_initial }}">
+          {% for post in non_featured_posts %}
+            {% if latest_count >= latest_max %}
+              {% break %}
+            {% endif %}
+            {% assign post_key = '|' | append: post.url | append: '|' %}
+            {% unless curated_selected contains post_key %}
             {% assign card_parts = post.content | split: 'src="' %}
             {% if card_parts.size > 1 %}
               {% assign card_image = card_parts[1] | split: '"' | first %}
@@ -101,7 +231,7 @@ layout: default
               {% assign card_image = nil %}
             {% endif %}
 
-            <article class="post-card">
+            <article class="post-card paged-item{% if latest_count >= latest_initial %} is-collapsed{% endif %}">
               {% if card_image %}
                 <a class="card-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
                   <img src="{{ card_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="400" height="260" />
@@ -113,8 +243,18 @@ layout: default
                 <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 120 }}</p>
               </div>
             </article>
+            {% assign latest_count = latest_count | plus: 1 %}
+            {% endunless %}
           {% endfor %}
         </div>
+
+        {% if latest_count > latest_initial %}
+          <div class="section-actions">
+            <button type="button" class="load-more-btn js-load-more" data-target="#latest .js-paginated-list">
+              載入更多最新文章
+            </button>
+          </div>
+        {% endif %}
       </section>
     </main>
 
@@ -172,3 +312,28 @@ layout: default
     </aside>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var buttons = document.querySelectorAll('.js-load-more');
+
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var selector = button.getAttribute('data-target');
+        var list = selector ? document.querySelector(selector) : null;
+        if (!list) return;
+
+        var batch = parseInt(list.getAttribute('data-batch') || '6', 10);
+        var hidden = list.querySelectorAll('.paged-item.is-collapsed');
+
+        for (var i = 0; i < hidden.length && i < batch; i += 1) {
+          hidden[i].classList.remove('is-collapsed');
+        }
+
+        if (list.querySelectorAll('.paged-item.is-collapsed').length === 0) {
+          button.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

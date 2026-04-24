@@ -463,6 +463,73 @@ h5,
   line-height: 1.25;
 }
 
+.section-actions {
+  margin-top: 0.85rem;
+  text-align: center;
+}
+
+.load-more-btn {
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, white 65%);
+  background: var(--accent-soft);
+  color: var(--ink);
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.load-more-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.paged-item.is-collapsed {
+  display: none;
+}
+
+.investing-series-list .series-badge {
+  margin: 0.2rem 0 0.5rem;
+  display: inline-block;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, white 78%);
+  padding: 0.18rem 0.58rem;
+  font-size: 0.78rem;
+  color: #3f3a33;
+}
+
+.series-nav {
+  margin-top: 0.7rem;
+  display: flex;
+  gap: 0.45rem;
+}
+
+.series-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, white 72%);
+  background: var(--accent-soft);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.24rem 0.6rem;
+  min-width: 4.8rem;
+}
+
+.series-nav-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.series-nav-btn.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .category-index-list {
   list-style: none;
   margin: 0;

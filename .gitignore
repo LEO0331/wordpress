@@ -3,3 +3,23 @@
 # macOS Finder metadata
 .DS_Store
 **/.DS_Store
+
+# Editor/OS temp files
+*.swp
+*.swo
+*~
+Thumbs.db
+
+# Jekyll build/cache artifacts (site source is in my-site/)
+my-site/_site/
+my-site/.sass-cache/
+my-site/.jekyll-cache/
+my-site/.jekyll-metadata
+
+# Bundler/vendor artifacts
+my-site/.bundle/
+my-site/vendor/
+
+# Optional local env files
+.env
+.env.*

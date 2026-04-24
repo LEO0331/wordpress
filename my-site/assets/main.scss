@@ -7,7 +7,7 @@
   --paper: #f5f1e8;
   --surface: #fffdf8;
   --ink: #1d1d1d;
-  --muted: #5d5a54;
+  --muted: #433f38;
   --line: #d8cfbf;
   --accent: #b0431a;
   --accent-soft: #efe1d1;
@@ -25,6 +25,25 @@ body {
 .site-footer {
   border-color: var(--line);
   background: color-mix(in srgb, var(--surface) 94%, white 6%);
+}
+
+.site-footer,
+.site-footer .footer-col-wrapper,
+.site-footer .contact-list,
+.site-footer .social-media-list,
+.site-footer .feed-subscribe,
+.site-footer .rss-subscribe,
+.site-footer .p-name,
+.site-footer p {
+  color: #3f3a33;
+}
+
+.site-footer a {
+  color: #7a2f15;
+}
+
+.site-footer a:hover {
+  color: #5b220f;
 }
 
 .site-title,
@@ -436,6 +455,12 @@ h5,
 
 .category-posts h2 a:hover {
   color: var(--accent);
+}
+
+.post-list h2 {
+  margin: 0.2rem 0 0.3rem;
+  font-size: 1.2rem;
+  line-height: 1.25;
 }
 
 .category-index-list {

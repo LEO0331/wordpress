@@ -1,0 +1,32 @@
+---
+---
+{
+  "name": "{{ site.title | escape }}",
+  "short_name": "Leo Blog",
+  "description": "{{ site.description | escape }}",
+  "start_url": "{{ '/' | relative_url }}",
+  "scope": "{{ '/' | relative_url }}",
+  "display": "standalone",
+  "background_color": "#f5f1e8",
+  "theme_color": "#b0431a",
+  "icons": [
+    {
+      "src": "{{ '/assets/pwa/icon-192.png' | relative_url }}",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "{{ '/assets/pwa/icon-512.png' | relative_url }}",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "{{ '/assets/pwa/icon-maskable-512.png' | relative_url }}",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

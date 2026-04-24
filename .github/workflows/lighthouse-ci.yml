@@ -38,6 +38,22 @@ jobs:
       - name: Run Lighthouse CI
         run: npx @lhci/cli@0.13.x autorun --config=.lighthouserc.json
 
+      - name: Add Lighthouse report links to summary
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = '.lighthouseci/links.json';
+          if (!fs.existsSync(path)) process.exit(0);
+
+          const links = JSON.parse(fs.readFileSync(path, 'utf8'));
+          let out = '## Lighthouse 臨時報告連結\n\n';
+          for (const [url, report] of Object.entries(links)) {
+            out += `- [${url}](${report})\n`;
+          }
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, out);
+          NODE
+
       - name: Upload Lighthouse artifacts
         if: always()
         uses: actions/upload-artifact@v4

@@ -38,6 +38,37 @@ bundle exec jekyll serve
 
 Then open: `http://127.0.0.1:4000/wordpress/`
 
+## Importing new posts from WordPress XML
+
+Use the built-in migration script. You do not need to manually convert XML to Markdown.
+
+```bash
+cd my-site
+bundle exec ruby scripts/wordpress_to_jekyll.rb \
+  --xml import/leo.WordPress.2026-04-23.xml \
+  --posts-dir _posts
+```
+
+Notes:
+
+- Existing post filename collisions are skipped (safe default).
+- This means re-running the script will add new posts and keep existing files.
+- If you edited a post on WordPress and want to refresh that same post file, remove that specific `_posts/YYYY-MM-DD-slug.md` and run the script again.
+
+## Regenerating category pages
+
+After adding or changing posts/categories, regenerate category pages and category index:
+
+```bash
+cd my-site
+bundle exec ruby scripts/generate_category_pages.rb
+```
+
+This updates:
+
+- `my-site/category/*.markdown` (one page per category)
+- `my-site/categories.markdown` (all categories index)
+
 ## Deployment
 
 This repo deploys with GitHub Actions on push to `main`.

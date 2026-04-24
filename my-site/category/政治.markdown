@@ -1,0 +1,7 @@
+---
+layout: category
+title: "Category: 政治"
+permalink: /category/政治/
+category_name: "政治"
+category_count: 2
+---

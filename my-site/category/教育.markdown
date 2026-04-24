@@ -1,0 +1,7 @@
+---
+layout: category
+title: "Category: 教育"
+permalink: /category/教育/
+category_name: "教育"
+category_count: 2
+---

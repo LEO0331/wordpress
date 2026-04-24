@@ -1,0 +1,169 @@
+---
+layout: default
+---
+
+<div class="mag-shell">
+  <header class="mag-masthead">
+    <p class="edition">Weekend Edition · {{ "now" | date: "%Y-%m-%d" }}</p>
+    <h1>{{ site.title }}</h1>
+    <p class="deck">{{ site.description }}</p>
+    <nav class="mast-nav" aria-label="Homepage sections">
+      <a href="#lead">Top Story</a>
+      <a href="#headlines">Headlines</a>
+      <a href="#latest">Latest</a>
+      <a href="{{ '/archive/' | relative_url }}">Archive</a>
+      <a href="{{ '/about/' | relative_url }}">About</a>
+    </nav>
+  </header>
+
+  <div class="mag-frontpage">
+    <main class="mag-main">
+      {% assign featured = site.posts.first %}
+
+      {% if featured %}
+        {% assign featured_parts = featured.content | split: 'src="' %}
+        {% if featured_parts.size > 1 %}
+          {% assign featured_image = featured_parts[1] | split: '"' | first %}
+        {% else %}
+          {% assign featured_image = nil %}
+        {% endif %}
+
+        <section id="lead" class="lead-package">
+          <article class="lead-story">
+            {% if featured_image %}
+              <a class="lead-media" href="{{ featured.url | relative_url }}" aria-label="{{ featured.title | escape }}">
+                <img src="{{ featured_image }}" alt="{{ featured.title | escape }}" loading="eager" />
+              </a>
+            {% endif %}
+            <div class="lead-copy">
+              <p class="kicker">Cover Story</p>
+              <h2><a href="{{ featured.url | relative_url }}">{{ featured.title }}</a></h2>
+              <p class="meta">{{ featured.date | date: "%Y-%m-%d" }}{% if featured.author %} · {{ featured.author }}{% endif %}</p>
+              <p>{{ featured.excerpt | strip_html | normalize_whitespace | truncate: 220 }}</p>
+              <a class="read-more" href="{{ featured.url | relative_url }}">Read Story</a>
+            </div>
+          </article>
+
+          <div class="lead-side">
+            <h3>Editor Picks</h3>
+            {% for post in site.posts offset:1 limit:3 %}
+              {% assign side_parts = post.content | split: 'src="' %}
+              {% if side_parts.size > 1 %}
+                {% assign side_image = side_parts[1] | split: '"' | first %}
+              {% else %}
+                {% assign side_image = nil %}
+              {% endif %}
+
+              <article class="mini-story">
+                {% if side_image %}
+                  <a class="mini-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
+                    <img src="{{ side_image }}" alt="{{ post.title | escape }}" loading="lazy" />
+                  </a>
+                {% endif %}
+                <div>
+                  <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
+                  <h4><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h4>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      <section id="headlines" class="headline-ribbon">
+        <h3>Headlines</h3>
+        <ul>
+          {% for post in site.posts offset:4 limit:6 %}
+            <li>
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              <span>{{ post.date | date: "%Y-%m-%d" }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      <section id="latest" class="latest-grid">
+        <div class="section-head">
+          <h3>Latest Dispatches</h3>
+          <a href="{{ '/archive/' | relative_url }}" class="section-link">View all</a>
+        </div>
+        <div class="post-cards">
+          {% for post in site.posts offset:10 limit:9 %}
+            {% assign card_parts = post.content | split: 'src="' %}
+            {% if card_parts.size > 1 %}
+              {% assign card_image = card_parts[1] | split: '"' | first %}
+            {% else %}
+              {% assign card_image = nil %}
+            {% endif %}
+
+            <article class="post-card">
+              {% if card_image %}
+                <a class="card-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
+                  <img src="{{ card_image }}" alt="{{ post.title | escape }}" loading="lazy" />
+                </a>
+              {% endif %}
+              <div class="card-body">
+                <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
+                <h4><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h4>
+                <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 120 }}</p>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+
+    <aside class="mag-sidebar">
+      <section class="sidebar-card">
+        <h3>From the Desk</h3>
+        <p>Books, films, and life notes from Leo, archived and continuously updated.</p>
+      </section>
+
+      <section class="sidebar-card">
+        <h3>Recent</h3>
+        <ul class="compact-list">
+          {% for post in site.posts limit:7 %}
+            <li>
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              <span>{{ post.date | date: "%m-%d" }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      <section class="sidebar-card">
+        <h3>Topics</h3>
+        <ul class="topic-cloud">
+          {% for category in site.categories limit:12 %}
+            {% assign category_page = site.pages | where: "category_name", category[0] | first %}
+            <li>
+              {% if category_page %}
+                <a class="topic-link" href="{{ category_page.url | relative_url }}">
+                  <span class="topic-name">{{ category[0] }}</span>
+                  <span class="topic-count">{{ category[1].size }}</span>
+                </a>
+              {% else %}
+                <span class="topic-name">{{ category[0] }}</span>
+                <span class="topic-count">{{ category[1].size }}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+        <p class="topic-all"><a href="{{ '/categories/' | relative_url }}">Browse all categories</a></p>
+      </section>
+
+      <section class="sidebar-card">
+        <h3>By Year</h3>
+        <ul class="compact-list years">
+          {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+          {% for year in posts_by_year limit:10 %}
+            <li>
+              <span>{{ year.name }}</span>
+              <span>{{ year.items | size }} posts</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    </aside>
+  </div>
+</div>

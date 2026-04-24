@@ -1,0 +1,7 @@
+---
+layout: category
+title: "Category: 哲學"
+permalink: /category/哲學/
+category_name: "哲學"
+category_count: 3
+---

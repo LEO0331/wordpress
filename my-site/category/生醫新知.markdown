@@ -1,0 +1,7 @@
+---
+layout: category
+title: "Category: 生醫新知"
+permalink: /category/生醫新知/
+category_name: "生醫新知"
+category_count: 12
+---

@@ -1,0 +1,7 @@
+---
+layout: category
+title: "Category: 人際"
+permalink: /category/人際/
+category_name: "人際"
+category_count: 1
+---

@@ -1,0 +1,7 @@
+---
+layout: category
+title: "Category: 生活"
+permalink: /category/生活/
+category_name: "生活"
+category_count: 4
+---

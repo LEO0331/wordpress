@@ -1,0 +1,22 @@
+---
+layout: default
+---
+
+<div class="category-page">
+  <header class="category-header">
+    <p class="kicker">Category</p>
+    <h1>{{ page.category_name }}</h1>
+    <p>{{ page.category_count }} posts</p>
+  </header>
+
+  <ul class="category-posts">
+    {% assign cat_posts = site.posts | where_exp: "post", "post.categories contains page.category_name" %}
+    {% for post in cat_posts %}
+      <li>
+        <span class="meta">{{ post.date | date: "%Y-%m-%d" }}</span>
+        <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+        <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 170 }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

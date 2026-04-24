@@ -1,0 +1,7 @@
+---
+layout: category
+title: "Category: 文化人類學"
+permalink: /category/文化人類學/
+category_name: "文化人類學"
+category_count: 2
+---

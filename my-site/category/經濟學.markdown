@@ -1,0 +1,7 @@
+---
+layout: category
+title: "Category: 經濟學"
+permalink: /category/經濟學/
+category_name: "經濟學"
+category_count: 6
+---

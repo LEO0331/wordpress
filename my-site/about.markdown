@@ -1,26 +1,24 @@
 ---
 layout: page
-title: About
+title: 關於本站
 permalink: /about/
 ---
 
-Welcome to my blog archive.
+<p>這是我的個人部落格，主要記錄閱讀、電影、工作與生活觀察。</p>
 
-This site preserves my writing on books, movies, technology, and life notes. It was migrated from WordPress to Jekyll so the content can stay portable, searchable, and under my own control.
+本站由 WordPress 遷移至 Jekyll，目標是讓內容更長期可保存、可搜尋，也便於以 Git 管理與備份。
 
-## What you'll find here
+## 內容主題
 
-- Reading notes and book reviews
-- Short movie reviews
-- Personal notes on work, learning, and daily life
-- Long-form archived posts from earlier years
+- 閱讀筆記與書評
+- 電影短評
+- 職場與學習心得
+- 生活紀錄與歷年文章彙整
 
-## Why this site exists
+## 為什麼持續寫作
 
-I wanted a long-term backup of my writing that:
+- 留下可回顧的思考軌跡
+- 建立可持續更新的知識庫
+- 用更清楚的文字整理經驗與觀點
 
-- does not depend on a single platform,
-- can be versioned in Git,
-- and can be reused in future workflows (including Markdown tools).
-
-Thanks for reading.
+感謝你的閱讀，歡迎常來看看。

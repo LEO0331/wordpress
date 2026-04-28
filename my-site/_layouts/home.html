@@ -9,8 +9,8 @@ layout: default
     <p class="deck">{{ site.description }}</p>
     <nav class="mast-nav" aria-label="首頁區塊">
       <a href="#lead">封面故事</a>
-      <a href="#headlines">焦點新聞</a>
-      <a href="#latest">最新文章</a>
+      <a href="#headlines">生活</a>
+      <a href="#latest">精選文章</a>
       <a href="{{ '/investing-thoughts/' | relative_url }}">投資思考專欄</a>
       <a href="{{ '/archive/' | relative_url }}">文章彙整</a>
       <a href="{{ '/about/' | relative_url }}">關於本站</a>
@@ -153,7 +153,7 @@ layout: default
       {% endif %}
 
       <section id="headlines" class="headline-ribbon">
-        <h3>焦點新聞</h3>
+        <h3>生活</h3>
         {% assign headline_initial = site.home_curation.headline_initial | default: 6 %}
         {% assign headline_max = site.home_curation.headline_max | default: 24 %}
         {% assign headline_count = 0 %}
@@ -200,7 +200,7 @@ layout: default
         {% if headline_count > headline_initial %}
           <div class="section-actions">
             <button type="button" class="load-more-btn js-load-more" data-target="#headlines .js-paginated-list">
-              載入更多焦點新聞
+              載入更多生活文章
             </button>
           </div>
         {% endif %}
@@ -208,7 +208,7 @@ layout: default
 
       <section id="latest" class="latest-grid">
         <div class="section-head">
-          <h3>最新文章</h3>
+          <h3>精選文章</h3>
           <a href="{{ '/archive/' | relative_url }}" class="section-link">查看全部</a>
         </div>
 
@@ -251,7 +251,7 @@ layout: default
         {% if latest_count > latest_initial %}
           <div class="section-actions">
             <button type="button" class="load-more-btn js-load-more" data-target="#latest .js-paginated-list">
-              載入更多最新文章
+              載入更多精選文章
             </button>
           </div>
         {% endif %}

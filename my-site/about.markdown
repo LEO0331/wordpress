@@ -4,9 +4,9 @@ title: 關於本站
 permalink: /about/
 ---
 
-<p>這是我的個人部落格，主要記錄閱讀、電影、工作與生活觀察。</p>
+<p>這是我的個人部落格靜態備份與文章封存版本，主要記錄閱讀、電影、工作與生活觀察。</p>
 
-本站由 WordPress 遷移至 Jekyll，目標是讓內容更長期可保存、可搜尋，也便於以 Git 管理與備份。
+我主要在 [WordPress](https://leolicheng.wordpress.com/){: .archive-source-link rel="external"} 發表文章，這裡則以 Jekyll 與 GitHub Pages 保存靜態備份，讓歷年內容能長期留存。透過 Git 保留版本紀錄，也讓文章便於攜帶與備份。
 
 ## 內容主題
 

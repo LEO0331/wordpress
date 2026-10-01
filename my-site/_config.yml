@@ -4,8 +4,11 @@ description: >-
 baseurl: "/wordpress"
 url: "https://leo0331.github.io"
 timezone: Asia/Taipei
+lang: zh-Hant
 
 theme: minima
+minima:
+  date_format: "%Y-%m-%d"
 plugins:
   - jekyll-feed
 

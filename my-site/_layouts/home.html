@@ -4,7 +4,7 @@ layout: default
 
 <div class="mag-shell">
   <header class="mag-masthead">
-    <p class="edition">週末特刊 · {{ "now" | date: "%Y-%m-%d" }}</p>
+    <p class="edition">WordPress 靜態備份</p>
     <h1>{{ site.title }}</h1>
     <p class="deck">{{ site.description }}</p>
     <nav class="mast-nav" aria-label="首頁區塊">
@@ -304,7 +304,7 @@ layout: default
           {% for year in posts_by_year limit:10 %}
             <li>
               <span>{{ year.name }}</span>
-              <span>{{ year.items | size }} posts</span>
+              <span>{{ year.items | size }} 篇</span>
             </li>
           {% endfor %}
         </ul>

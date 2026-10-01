@@ -18,7 +18,7 @@ body {
     linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 16rem),
     radial-gradient(circle at 88% 3%, #f1e2d1 0, var(--paper) 52%);
   color: var(--ink);
-  font-family: "Avenir Next", Avenir, "Segoe UI", Roboto, sans-serif;
+  font-family: "Avenir Next", Avenir, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
 }
 
 .site-header,
@@ -46,6 +46,25 @@ body {
   color: #5b220f;
 }
 
+.archive-notice {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.archive-notice a,
+.archive-source-link {
+  color: #7a2f15;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .site-title,
 h1,
 h2,
@@ -53,7 +72,7 @@ h3,
 h4,
 h5,
 .post-link {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Songti TC", "PMingLiU", serif;
 }
 
 .wrapper {
@@ -599,7 +618,14 @@ h5,
   }
 
   .mast-nav a {
-    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.55rem 0.5rem;
+    font-size: 0.9rem;
   }
 
   .post-cards,

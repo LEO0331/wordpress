@@ -2,7 +2,7 @@
 ---
 {
   "name": "{{ site.title | escape }}",
-  "short_name": "Leo Blog",
+  "short_name": "Leo的隨筆",
   "description": "{{ site.description | escape }}",
   "start_url": "{{ '/' | relative_url }}",
   "scope": "{{ '/' | relative_url }}",

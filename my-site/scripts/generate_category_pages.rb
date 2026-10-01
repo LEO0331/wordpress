@@ -81,7 +81,7 @@ end
 index = <<~MD
   ---
   layout: page
-  title: Categories
+  title: 文章分類
   permalink: /categories/
   ---
 

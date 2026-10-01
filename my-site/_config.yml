@@ -3,6 +3,7 @@ description: >-
   書 電影 生活
 baseurl: "/wordpress"
 url: "https://leo0331.github.io"
+timezone: Asia/Taipei
 
 theme: minima
 plugins:

@@ -38,7 +38,45 @@ bundle exec jekyll serve
 
 Then open: `http://127.0.0.1:4000/wordpress/`
 
-## Importing new posts from WordPress XML
+## Automatic WordPress updates
+
+The public source is [leolicheng.wordpress.com](https://leolicheng.wordpress.com/).
+`.github/workflows/sync-wordpress.yml` runs on January, April, July, and October 1
+at approximately **09:17 Asia/Taipei**. It can also run on demand from GitHub
+Actions → **Sync WordPress archive quarterly** → **Run workflow**.
+
+The workflow fetches all published posts through the WordPress.com public API,
+imports missing articles with their WordPress categories and tags, downloads
+images hosted on this blog's WordPress media domain, regenerates category pages,
+tests the importer, builds Jekyll, commits archive changes, and deploys GitHub
+Pages. New categories are generated automatically; no manual category code is
+needed. No WordPress password or personal access token is required.
+
+The workflow must be on `main`, Actions must be enabled, and repository rules
+must allow `github-actions[bot]` to push to `main`. Pages must use GitHub Actions
+(as in the existing deployment workflow). Scheduled runs may be delayed, and
+GitHub can disable schedules in public repositories after 60 days without
+activity; check the Actions page if updates stop.
+
+Run locally with Python 3.10+ (standard library only):
+
+```bash
+python my-site/scripts/sync_wordpress.py --check  # read-only comparison
+python my-site/scripts/sync_wordpress.py          # import/update
+cd my-site
+bundle exec ruby scripts/generate_category_pages.rb
+bundle exec jekyll build
+```
+
+Existing XML-imported posts are preserved, including local edits and image
+rewrites. Posts first imported by the API script carry a WordPress ID and are
+refreshed on later runs, including content/category changes, while preserving
+their archive filename if the source slug changes. Edit those posts in WordPress,
+since local changes to API-managed posts will be overwritten. Archived posts are
+never deleted when their source disappears. Drafts/private posts, comments,
+WordPress pages, and externally hosted media are outside this sync's scope.
+
+## Importing posts from WordPress XML
 
 Use the built-in migration script. You do not need to manually convert XML to Markdown.
 

@@ -26,3 +26,7 @@ my-site/vendor/
 
 # Lighthouse local artifacts
 .lighthouseci/
+
+# Python importer bytecode
+__pycache__/
+*.pyc

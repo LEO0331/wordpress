@@ -1,0 +1,65 @@
+name: Sync WordPress archive quarterly
+
+on:
+  schedule:
+    # January, April, July, October 1 at 09:17 Asia/Taipei (01:17 UTC).
+    - cron: "17 1 1 1,4,7,10 *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wordpress-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      ref: ${{ steps.commit.outputs.ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+      - name: Test importer
+        run: python -m unittest discover -s my-site/scripts/tests -v
+      - name: Fetch published articles and images
+        run: python my-site/scripts/sync_wordpress.py
+      - name: Refresh categories and validate Jekyll
+        working-directory: my-site
+        run: |
+          bundle install --jobs 4 --retry 3
+          bundle exec ruby scripts/generate_category_pages.rb
+          bundle exec jekyll build
+      - name: Commit archive updates
+        id: commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add my-site/_posts my-site/assets/images my-site/category my-site/categories.markdown
+          if ! git diff --cached --quiet; then
+            git commit -m 'Keep the public archive current with WordPress' -m 'Tested: Importer tests and Jekyll build' -m 'Scope-risk: narrow'
+            git push origin HEAD:main
+          fi
+          echo "ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  # A GITHUB_TOKEN push does not trigger another push workflow.
+  # Explicitly deploy the commit just validated by the sync job.
+  deploy:
+    needs: sync
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy-pages.yml
+    with:
+      ref: ${{ needs.sync.outputs.ref }}

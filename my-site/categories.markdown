@@ -5,19 +5,19 @@ permalink: /categories/
 ---
 
 <ul class="category-index-list">
+  <li><a href="{{ '/category/商業理財/' | relative_url }}">商業理財</a> <span>(26)</span></li>
   <li><a href="{{ '/category/電影評論/' | relative_url }}">電影評論</a> <span>(23)</span></li>
-  <li><a href="{{ '/category/商業理財/' | relative_url }}">商業理財</a> <span>(21)</span></li>
-  <li><a href="{{ '/category/生醫新知/' | relative_url }}">生醫新知</a> <span>(12)</span></li>
-  <li><a href="{{ '/category/自我成長/' | relative_url }}">自我成長</a> <span>(11)</span></li>
+  <li><a href="{{ '/category/自我成長/' | relative_url }}">自我成長</a> <span>(14)</span></li>
+  <li><a href="{{ '/category/生醫新知/' | relative_url }}">生醫新知</a> <span>(13)</span></li>
+  <li><a href="{{ '/category/投資/' | relative_url }}">投資</a> <span>(12)</span></li>
   <li><a href="{{ '/category/職場工作/' | relative_url }}">職場工作</a> <span>(10)</span></li>
   <li><a href="{{ '/category/社會議題/' | relative_url }}">社會議題</a> <span>(9)</span></li>
   <li><a href="{{ '/category/實用/' | relative_url }}">實用</a> <span>(8)</span></li>
-  <li><a href="{{ '/category/投資/' | relative_url }}">投資</a> <span>(8)</span></li>
   <li><a href="{{ '/category/心理學/' | relative_url }}">心理學</a> <span>(7)</span></li>
   <li><a href="{{ '/category/社會科學/' | relative_url }}">社會科學</a> <span>(7)</span></li>
+  <li><a href="{{ '/category/程式設計/' | relative_url }}">程式設計</a> <span>(6)</span></li>
   <li><a href="{{ '/category/經濟學/' | relative_url }}">經濟學</a> <span>(6)</span></li>
   <li><a href="{{ '/category/自然科普/' | relative_url }}">自然科普</a> <span>(6)</span></li>
-  <li><a href="{{ '/category/程式設計/' | relative_url }}">程式設計</a> <span>(5)</span></li>
   <li><a href="{{ '/category/english-book-review/' | relative_url }}">English book review</a> <span>(4)</span></li>
   <li><a href="{{ '/category/懸疑-推理小說/' | relative_url }}">懸疑/推理小說</a> <span>(4)</span></li>
   <li><a href="{{ '/category/旅行/' | relative_url }}">旅行</a> <span>(4)</span></li>

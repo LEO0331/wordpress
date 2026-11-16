@@ -17,7 +17,6 @@ This repository contains a migrated version of a WordPress blog, rebuilt as a Je
 - `my-site/`: Jekyll source site
 - `my-site/_posts/`: Migrated Markdown/HTML posts
 - `my-site/assets/images/`: Local image assets used by posts
-- `my-site/import/`: Original WordPress export XML
 - `my-site/scripts/wordpress_to_jekyll.rb`: Migration + image-link rewrite script
 - `.github/workflows/deploy-pages.yml`: GitHub Pages deployment workflow
 
@@ -58,9 +57,10 @@ must allow `github-actions[bot]` to push to `main`. Pages must use GitHub Action
 GitHub can disable schedules in public repositories after 60 days without
 activity; check the Actions page if updates stop.
 
-Run locally with Python 3.10+ (standard library only):
+Run locally with Python 3.10+:
 
 ```bash
+python -m pip install --only-binary=:all: -r my-site/scripts/requirements.txt
 python my-site/scripts/sync_wordpress.py --check  # read-only comparison
 python my-site/scripts/sync_wordpress.py          # import/update
 cd my-site
@@ -78,14 +78,19 @@ WordPress pages, and externally hosted media are outside this sync's scope.
 
 ## Importing posts from WordPress XML
 
-Use the built-in migration script. You do not need to manually convert XML to Markdown.
+Keep WordPress export XML files in private storage outside the repository. The
+built-in migration script accepts an absolute path to the export. The scheduled
+sync fetches published posts from the WordPress API independently of the XML.
 
 ```bash
 cd my-site
 bundle exec ruby scripts/wordpress_to_jekyll.rb \
-  --xml import/leo.WordPress.2026-04-23.xml \
-  --posts-dir _posts
+  --xml "/path/to/private/wordpress-export.xml" \
+  --posts-dir _posts \
+  --dry-run
 ```
+
+Remove `--dry-run` to write the imported posts after reviewing the preview.
 
 Notes:
 

@@ -13,9 +13,70 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote, unquote, urlencode, urlsplit
 from urllib.request import Request, urlopen
 
+import nh3
+
 SITE = "leolicheng.wordpress.com"
 ROOT = Path(__file__).resolve().parents[1]
 URL_RE = re.compile(r'https?://[^\s"\'<>]+')
+IMAGE_PATH = re.compile(
+    r'\d{4}/\d{2}/[^/\\:*?"<>|\x00-\x1f]+\.(?:jpg|jpeg|png|gif|webp|avif)',
+    re.IGNORECASE,
+)
+SRCSET_CANDIDATE = re.compile(
+    r'https?://[^\s,\\"\'<>]+[ \t]+(?:[1-9][0-9]*w|[0-9]+(?:\.[0-9]+)?x)',
+    re.IGNORECASE,
+)
+EMBED_PATHS = {
+    "www.youtube.com": "/embed/",
+    "www.youtube-nocookie.com": "/embed/",
+    "player.vimeo.com": "/video/",
+    "open.spotify.com": "/embed/",
+}
+
+
+def filter_content_attribute(tag, attribute, value):
+    if attribute == "style" and any(character in value for character in "()\\"):
+        # Keep plain formatting values and reject CSS functions and escaped tokens.
+        return None
+    if attribute == "srcset":
+        # WordPress emits comma-separated HTTP(S) URLs with width or density descriptors.
+        candidates = [candidate.strip() for candidate in value.split(",")]
+        if all(SRCSET_CANDIDATE.fullmatch(candidate) for candidate in candidates):
+            return ", ".join(candidates)
+        return None
+    if tag == "iframe" and attribute == "src":
+        try:
+            url = urlsplit(value)
+        except ValueError:
+            return None
+        prefix = EMBED_PATHS.get(url.netloc.lower())
+        if url.scheme != "https" or not prefix or not url.path.startswith(prefix):
+            return None
+    return value
+
+
+CONTENT_CLEANER = nh3.Cleaner(
+    tags=nh3.ALLOWED_TAGS | {"audio", "figure", "figcaption", "iframe", "source", "video"},
+    attributes={
+        **nh3.ALLOWED_ATTRIBUTES,
+        "*": {"class", "dir", "lang", "style", "title"},
+        "a": nh3.ALLOWED_ATTRIBUTES["a"] | {"target"},
+        "audio": {"controls", "loop", "muted", "preload", "src"},
+        "iframe": {"allowfullscreen", "height", "loading", "src", "width"},
+        "img": nh3.ALLOWED_ATTRIBUTES["img"] | {"decoding", "loading", "sizes", "srcset"},
+        "source": {"sizes", "src", "srcset", "type"},
+        "video": {"controls", "height", "loop", "muted", "playsinline", "poster", "preload", "src", "width"},
+    },
+    attribute_filter=filter_content_attribute,
+    set_tag_attribute_values={
+        "iframe": {"sandbox": "allow-scripts allow-same-origin allow-presentation"},
+    },
+    filter_style_properties={
+        "aspect-ratio", "color", "font-size", "height", "max-width",
+        "object-fit", "text-align", "white-space", "width",
+    },
+    url_schemes={"http", "https", "mailto", "tel"},
+)
 
 
 def fetch(url):
@@ -66,21 +127,24 @@ def slug_for(post):
 def rewrite_images(content, root, check):
     def replace(match):
         url = html.unescape(match.group())
-        parsed = urlsplit(url)
+        try:
+            parsed = urlsplit(url)
+        except ValueError:
+            return match.group()
         if parsed.hostname == SITE and parsed.path.startswith("/wp-content/uploads/"):
             path = unquote(parsed.path[len("/wp-content/uploads/"):])
         elif parsed.hostname == "leolicheng.files.wordpress.com":
             path = unquote(parsed.path).lstrip("/")
         else:
             return match.group()
-        if not re.fullmatch(r"\d{4}/\d{2}/[^/\\]+\.(?:jpg|jpeg|png|gif|webp|avif)", path, re.IGNORECASE):
+        if not IMAGE_PATH.fullmatch(path):
             return match.group()
         target = root / "assets" / "images" / path
         if not target.is_file() and not check:
             data = fetch(f"https://leolicheng.files.wordpress.com/{quote(path)}")
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
-        return "{{ '/assets/images/" + path + "' | relative_url }}"
+        return "{{ '/assets/images/" + quote(path) + "' | relative_url }}"
     return URL_RE.sub(replace, content)
 
 
@@ -95,12 +159,12 @@ def render_post(post, root, check):
         "wordpress_id": post["ID"], "wordpress_url": post["URL"],
         "wordpress_modified": post["modified"],
     }
-    content = rewrite_images(post["content"], root, check)
-    # Prevent source prose containing Liquid syntax from executing as a template.
-    # Keep our generated relative_url expressions working outside the raw blocks.
-    content = content.replace("{% endraw %}", "&#123;% endraw %&#125;")
-    content = re.sub(r"(\{\{ '/assets/images/[^\n]+?' \| relative_url \}\})", r"{% endraw %}\1{% raw %}", content)
-    return "---\n" + json.dumps(metadata, ensure_ascii=False, indent=2) + "\n---\n\n{% raw %}\n" + content.rstrip() + "\n{% endraw %}\n"
+    content = CONTENT_CLEANER.clean(post["content"])
+    # Neutralize source Liquid before adding the importer-owned image expressions.
+    content = rewrite_images(content.replace("{", "&#123;"), root, check)
+    # Keep Markdown from interpreting sanitized WordPress HTML or its text as markup.
+    front_matter = json.dumps(metadata, ensure_ascii=False, indent=2)
+    return f'---\n{front_matter}\n---\n\n<div markdown="0">\n{content.rstrip()}\n</div>\n'
 
 
 def sync(posts, root=ROOT, check=False):
@@ -136,7 +200,7 @@ def sync(posts, root=ROOT, check=False):
             counts["unchanged"] += 1
             continue
         counts[action] += 1
-        print(f"{action}: {html.unescape(post['title'])}")
+        print(f"{action}: {json.dumps(html.unescape(post['title']), ensure_ascii=False)}")
         if not check:
             directory.mkdir(parents=True, exist_ok=True)
             target.write_text(rendered, encoding="utf-8", newline="\n")
@@ -151,7 +215,7 @@ def main():
     try:
         sync(fetch_posts(), check=args.check)
     except (HTTPError, URLError, TimeoutError, ValueError, KeyError, OSError) as error:
-        print(f"Sync failed: {error}", file=sys.stderr)
+        print(f"Sync failed: {json.dumps(str(error), ensure_ascii=False)}", file=sys.stderr)
         return 1
     return 0
 

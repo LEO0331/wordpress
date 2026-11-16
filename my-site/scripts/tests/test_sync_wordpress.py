@@ -64,6 +64,34 @@ class SyncTests(unittest.TestCase):
                 self.assertEqual(module.rewrite_images(uploaded, root, False), output)
                 self.assertEqual(fetch.call_count, 1)
 
+    def test_render_preserves_article_markup_and_treats_source_as_content(self):
+        item = post()
+        item["content"] = (
+            '<h2>Heading</h2><p style="text-align: center"><strong>Body</strong> {{ example }}</p>'
+            '<figure class="wp-block-image"><img alt="Photo" '
+            'srcset="https://leolicheng.files.wordpress.com/2026/09/another%20photo.jpg?w=300 300w, '
+            'https://leolicheng.files.wordpress.com/2026/09/another%20photo.jpg?w=600 600w" '
+            'src="https://leolicheng.files.wordpress.com/2026/09/another%20photo.jpg">'
+            '<figcaption>Caption</figcaption></figure>'
+            '<iframe src="https://www.youtube.com/embed/video" allowfullscreen></iframe>'
+            '<iframe src="https://example.org/embed/video"></iframe>'
+            '<script>example</script>'
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            rendered = module.render_post(item, Path(directory), check=True)
+        self.assertIn('<div markdown="0">', rendered)
+        self.assertIn("<h2>Heading</h2>", rendered)
+        self.assertIn("<strong>Body</strong> &#123;&#123; example }}", rendered)
+        self.assertIn('<figure class="wp-block-image">', rendered)
+        image = "{{ '/assets/images/2026/09/another%20photo.jpg' | relative_url }}"
+        self.assertIn(f'src="{image}"', rendered)
+        self.assertIn(f'srcset="{image} 300w, {image} 600w"', rendered)
+        self.assertIn("<figcaption>Caption</figcaption>", rendered)
+        self.assertIn('src="https://www.youtube.com/embed/video"', rendered)
+        self.assertIn('sandbox="allow-scripts allow-same-origin allow-presentation"', rendered)
+        self.assertNotIn("https://example.org/", rendered)
+        self.assertNotIn("<script>", rendered)
+
 
 if __name__ == "__main__":
     unittest.main()

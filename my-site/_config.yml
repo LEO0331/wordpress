@@ -11,6 +11,8 @@ minima:
   date_format: "%Y-%m-%d"
 plugins:
   - jekyll-feed
+exclude:
+  - import
 
 home_curation:
   pinned_titles:

@@ -5,8 +5,8 @@ layout: default
 <div class="mag-shell">
   <header class="mag-masthead">
     <p class="edition">WordPress 靜態備份</p>
-    <h1>{{ site.title }}</h1>
-    <p class="deck">{{ site.description }}</p>
+    <h1>{{ site.title | escape_once }}</h1>
+    <p class="deck">{{ site.description | escape_once }}</p>
     <nav class="mast-nav" aria-label="首頁區塊">
       <a href="#lead">封面故事</a>
       <a href="#headlines">生活</a>
@@ -40,16 +40,16 @@ layout: default
         <section id="lead" class="lead-package">
           <article class="lead-story">
             {% if featured_image %}
-              <a class="lead-media" href="{{ featured.url | relative_url }}" aria-label="{{ featured.title | escape }}">
-                <img src="{{ featured_image }}" alt="{{ featured.title | escape }}" loading="eager" fetchpriority="high" decoding="async" width="1200" height="700" />
+              <a class="lead-media" href="{{ featured.url | relative_url | escape_once }}" aria-label="{{ featured.title | escape_once }}">
+                <img src="{{ featured_image | escape_once }}" alt="{{ featured.title | escape_once }}" loading="eager" fetchpriority="high" decoding="async" width="1200" height="700" />
               </a>
             {% endif %}
             <div class="lead-copy">
               <p class="kicker">封面故事</p>
-              <h2><a href="{{ featured.url | relative_url }}">{{ featured.title }}</a></h2>
-              <p class="meta">{{ featured.date | date: "%Y-%m-%d" }}{% if featured.author %} · {{ featured.author }}{% endif %}</p>
-              <p>{{ featured.excerpt | strip_html | normalize_whitespace | truncate: 220 }}</p>
-              <a class="read-more" href="{{ featured.url | relative_url }}">閱讀全文</a>
+              <h2><a href="{{ featured.url | relative_url | escape_once }}">{{ featured.title | escape_once }}</a></h2>
+              <p class="meta">{{ featured.date | date: "%Y-%m-%d" }}{% if featured.author %} · {{ featured.author | escape_once }}{% endif %}</p>
+              <p>{{ featured.excerpt | strip_html | normalize_whitespace | truncate: 220 | escape_once }}</p>
+              <a class="read-more" href="{{ featured.url | relative_url | escape_once }}">閱讀全文</a>
             </div>
           </article>
 
@@ -74,13 +74,13 @@ layout: default
 
                   <article class="mini-story">
                     {% if side_image %}
-                      <a class="mini-media" href="{{ pinned_post.url | relative_url }}" aria-label="{{ pinned_post.title | escape }}">
-                        <img src="{{ side_image }}" alt="{{ pinned_post.title | escape }}" loading="lazy" decoding="async" width="92" height="72" />
+                      <a class="mini-media" href="{{ pinned_post.url | relative_url | escape_once }}" aria-label="{{ pinned_post.title | escape_once }}">
+                        <img src="{{ side_image | escape_once }}" alt="{{ pinned_post.title | escape_once }}" loading="lazy" decoding="async" width="92" height="72" />
                       </a>
                     {% endif %}
                     <div>
                       <p class="meta">{{ pinned_post.date | date: "%Y-%m-%d" }}</p>
-                      <h4><a href="{{ pinned_post.url | relative_url }}">{{ pinned_post.title }}</a></h4>
+                      <h4><a href="{{ pinned_post.url | relative_url | escape_once }}">{{ pinned_post.title | escape_once }}</a></h4>
                     </div>
                   </article>
                   {% assign editor_selected = editor_selected | append: pinned_post.url | append: '|' %}
@@ -105,13 +105,13 @@ layout: default
 
                 <article class="mini-story">
                   {% if side_image %}
-                    <a class="mini-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
-                      <img src="{{ side_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="92" height="72" />
+                    <a class="mini-media" href="{{ post.url | relative_url | escape_once }}" aria-label="{{ post.title | escape_once }}">
+                      <img src="{{ side_image | escape_once }}" alt="{{ post.title | escape_once }}" loading="lazy" decoding="async" width="92" height="72" />
                     </a>
                   {% endif %}
                   <div>
                     <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
-                    <h4><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h4>
+                    <h4><a href="{{ post.url | relative_url | escape_once }}">{{ post.title | escape_once }}</a></h4>
                   </div>
                 </article>
                 {% assign editor_selected = editor_selected | append: post.url | append: '|' %}
@@ -135,13 +135,13 @@ layout: default
 
                 <article class="mini-story">
                   {% if side_image %}
-                    <a class="mini-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
-                      <img src="{{ side_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="92" height="72" />
+                    <a class="mini-media" href="{{ post.url | relative_url | escape_once }}" aria-label="{{ post.title | escape_once }}">
+                      <img src="{{ side_image | escape_once }}" alt="{{ post.title | escape_once }}" loading="lazy" decoding="async" width="92" height="72" />
                     </a>
                   {% endif %}
                   <div>
                     <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
-                    <h4><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h4>
+                    <h4><a href="{{ post.url | relative_url | escape_once }}">{{ post.title | escape_once }}</a></h4>
                   </div>
                 </article>
                 {% assign editor_selected = editor_selected | append: post.url | append: '|' %}
@@ -172,7 +172,7 @@ layout: default
             {% if is_travel_or_practical %}
               {% unless headline_selected contains post_key %}
               <li class="paged-item{% if headline_count >= headline_initial %} is-collapsed{% endif %}">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                <a href="{{ post.url | relative_url | escape_once }}">{{ post.title | escape_once }}</a>
                 <span>{{ post.date | date: "%Y-%m-%d" }}</span>
               </li>
               {% assign headline_selected = headline_selected | append: post.url | append: '|' %}
@@ -188,7 +188,7 @@ layout: default
             {% assign post_key = '|' | append: post.url | append: '|' %}
             {% unless headline_selected contains post_key %}
               <li class="paged-item{% if headline_count >= headline_initial %} is-collapsed{% endif %}">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                <a href="{{ post.url | relative_url | escape_once }}">{{ post.title | escape_once }}</a>
                 <span>{{ post.date | date: "%Y-%m-%d" }}</span>
               </li>
               {% assign headline_selected = headline_selected | append: post.url | append: '|' %}
@@ -233,14 +233,14 @@ layout: default
 
             <article class="post-card paged-item{% if latest_count >= latest_initial %} is-collapsed{% endif %}">
               {% if card_image %}
-                <a class="card-media" href="{{ post.url | relative_url }}" aria-label="{{ post.title | escape }}">
-                  <img src="{{ card_image }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async" width="400" height="260" />
+                <a class="card-media" href="{{ post.url | relative_url | escape_once }}" aria-label="{{ post.title | escape_once }}">
+                  <img src="{{ card_image | escape_once }}" alt="{{ post.title | escape_once }}" loading="lazy" decoding="async" width="400" height="260" />
                 </a>
               {% endif %}
               <div class="card-body">
                 <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
-                <h4><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h4>
-                <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 120 }}</p>
+                <h4><a href="{{ post.url | relative_url | escape_once }}">{{ post.title | escape_once }}</a></h4>
+                <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 120 | escape_once }}</p>
               </div>
             </article>
             {% assign latest_count = latest_count | plus: 1 %}
@@ -269,7 +269,7 @@ layout: default
         <ul class="compact-list">
           {% for post in site.posts limit:7 %}
             <li>
-              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              <a href="{{ post.url | relative_url | escape_once }}">{{ post.title | escape_once }}</a>
               <span>{{ post.date | date: "%m-%d" }}</span>
             </li>
           {% endfor %}
@@ -283,12 +283,12 @@ layout: default
             {% assign category_page = site.pages | where: "category_name", category[0] | first %}
             <li>
               {% if category_page %}
-                <a class="topic-link" href="{{ category_page.url | relative_url }}">
-                  <span class="topic-name">{{ category[0] }}</span>
+                <a class="topic-link" href="{{ category_page.url | relative_url | escape_once }}">
+                  <span class="topic-name">{{ category[0] | escape_once }}</span>
                   <span class="topic-count">{{ category[1].size }}</span>
                 </a>
               {% else %}
-                <span class="topic-name">{{ category[0] }}</span>
+                <span class="topic-name">{{ category[0] | escape_once }}</span>
                 <span class="topic-count">{{ category[1].size }}</span>
               {% endif %}
             </li>

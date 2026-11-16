@@ -11,7 +11,7 @@ permalink: /archive/
     <li>
       <span class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
       <h2>
-        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        <a class="post-link" href="{{ post.url | relative_url | escape_once }}">{{ post.title | escape_once }}</a>
       </h2>
     </li>
   {% endfor %}

@@ -16,6 +16,9 @@ my-site/.sass-cache/
 my-site/.jekyll-cache/
 my-site/.jekyll-metadata
 
+# Private WordPress export files
+/my-site/import/
+
 # Bundler/vendor artifacts
 my-site/.bundle/
 my-site/vendor/

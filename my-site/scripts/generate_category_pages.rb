@@ -2,6 +2,8 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require 'cgi'
+require 'json'
 require 'fileutils'
 require 'pathname'
 require 'date'
@@ -66,16 +68,23 @@ sorted.each do |name, count|
   slug_map[name] = slug
 
   path = File.join(CATEGORY_DIR, "#{slug}.markdown")
+  quoted_name = JSON.generate(name)
   content = <<~MD
     ---
     layout: category
-    title: "#{name}"
+    title: #{quoted_name}
     permalink: /category/#{slug}/
-    category_name: "#{name}"
+    category_name: #{quoted_name}
     ---
   MD
 
   File.write(path, content)
+end
+
+category_links = sorted.map do |name, count|
+  # The index is rendered by Liquid before the browser decodes HTML entities.
+  label = CGI.escapeHTML(name).gsub('{', '&#123;')
+  "  <li><a href=\"{{ '/category/#{slug_map[name]}/' | relative_url }}\">#{label}</a> <span>(#{count})</span></li>"
 end
 
 index = <<~MD
@@ -86,7 +95,7 @@ index = <<~MD
   ---
 
   <ul class="category-index-list">
-  #{sorted.map { |name, count| "  <li><a href=\"{{ '/category/#{slug_map[name]}/' | relative_url }}\">#{name}</a> <span>(#{count})</span></li>" }.join("\n")}
+  #{category_links.join("\n")}
   </ul>
 MD
 

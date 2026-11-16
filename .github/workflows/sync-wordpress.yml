@@ -14,22 +14,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  sync:
+  prepare:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    outputs:
-      ref: ${{ steps.commit.outputs.ref }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: main
-      - uses: actions/setup-python@v5
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
         with:
           ruby-version: "3.4"
+      - name: Install importer dependencies
+        run: |
+          python -m pip install --only-binary=:all: -r my-site/scripts/requirements.txt
       - name: Test importer
         run: python -m unittest discover -s my-site/scripts/tests -v
       - name: Fetch published articles and images
@@ -40,26 +41,73 @@ jobs:
           bundle install --jobs 4 --retry 3
           bundle exec ruby scripts/generate_category_pages.rb
           bundle exec jekyll build
+      - name: Prepare validated archive changes
+        run: |
+          git add my-site/_posts my-site/assets/images my-site/category my-site/categories.markdown
+          git diff --cached --binary --full-index --no-ext-diff -- \
+            my-site/_posts my-site/assets/images my-site/category my-site/categories.markdown \
+            > "$RUNNER_TEMP/wordpress-sync.patch"
+      - name: Upload archive patch
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: wordpress-sync
+          path: ${{ runner.temp }}/wordpress-sync.patch
+          if-no-files-found: error
+          overwrite: true
+
+  commit:
+    if: github.ref == 'refs/heads/main'
+    needs: prepare
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      ref: ${{ steps.commit.outputs.ref }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Download archive patch
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: wordpress-sync
+          path: ${{ runner.temp }}/wordpress-sync
       - name: Commit archive updates
         id: commit
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add my-site/_posts my-site/assets/images my-site/category my-site/categories.markdown
+          patch="$RUNNER_TEMP/wordpress-sync/wordpress-sync.patch"
+          test -f "$patch"
+          if [[ -s "$patch" ]]; then
+            git apply --cached \
+              --include='my-site/_posts/*.md' \
+              --include='my-site/_posts/*.markdown' \
+              --include='my-site/assets/images/*.[jJ][pP][gG]' \
+              --include='my-site/assets/images/*.[jJ][pP][eE][gG]' \
+              --include='my-site/assets/images/*.[pP][nN][gG]' \
+              --include='my-site/assets/images/*.[gG][iI][fF]' \
+              --include='my-site/assets/images/*.[wW][eE][bB][pP]' \
+              --include='my-site/assets/images/*.[aA][vV][iI][fF]' \
+              --include='my-site/category/*.markdown' \
+              --include='my-site/categories.markdown' \
+              "$patch"
+            git diff --cached --raw --no-renames | awk '$2 != "100644" && $2 != "000000" { exit 1 }'
+          fi
           if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git commit -m 'Keep the public archive current with WordPress' -m 'Tested: Importer tests and Jekyll build' -m 'Scope-risk: narrow'
             git push origin HEAD:main
           fi
           echo "ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
   # A GITHUB_TOKEN push does not trigger another push workflow.
-  # Explicitly deploy the commit just validated by the sync job.
+  # Explicitly deploy the commit produced from the validated archive patch.
   deploy:
-    needs: sync
+    needs: commit
     permissions:
       contents: read
       pages: write
       id-token: write
     uses: ./.github/workflows/deploy-pages.yml
     with:
-      ref: ${{ needs.sync.outputs.ref }}
+      ref: ${{ needs.commit.outputs.ref }}

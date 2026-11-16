@@ -29,22 +29,22 @@ permalink: /investing-thoughts/
         <li>
           <p class="meta">{{ post.date | date: "%Y-%m-%d" }}</p>
           <h2>
-            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <a href="{{ post.url | relative_url | escape_once }}">{{ post.title | escape_once }}</a>
           </h2>
           {% if issue_no > 0 %}
             <p class="series-badge">第 {{ issue_no }} 篇</p>
           {% endif %}
-          <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 170 }}</p>
+          <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 170 | escape_once }}</p>
 
           <div class="series-nav">
             {% if older_post %}
-              <a class="series-nav-btn" href="{{ older_post.url | relative_url }}">上一期</a>
+              <a class="series-nav-btn" href="{{ older_post.url | relative_url | escape_once }}">上一期</a>
             {% else %}
               <span class="series-nav-btn is-disabled">上一期</span>
             {% endif %}
 
             {% if newer_post %}
-              <a class="series-nav-btn" href="{{ newer_post.url | relative_url }}">下一期</a>
+              <a class="series-nav-btn" href="{{ newer_post.url | relative_url | escape_once }}">下一期</a>
             {% else %}
               <span class="series-nav-btn is-disabled">下一期</span>
             {% endif %}
